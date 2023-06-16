@@ -1,12 +1,13 @@
-# 📌 할 일(Todo) 관리하기
+# 📌 할 일(Todo) 관리 앱
 
-주어진 API를 활용해 '[완성 예시]()' 처럼 할 일(Todo) 관리 기능을 구현합니다!  
+주어진 API를 활용해 '[완성 예시](https://todo-vite-vue3-composition-ts.vercel.app/)' 처럼 할 일(Todo) 관리 기능을 구현합니다.  
+Vue Composition API + TypeScript를 사용해 구현합니다.
 
 ![완성 예시](./screenshots/ss1.JPG)  
 ![완성 예시](./screenshots/ss2.JPG)
 
 
-## API
+## API 정보
 
 모든 요청은 다음 Headers 정보가 필수로 포함돼야 합니다.   
 `<APIKEY>`와 `<USERNAME>` 정보는 별도 제공합니다.
