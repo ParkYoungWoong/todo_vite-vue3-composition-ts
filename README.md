@@ -1,9 +1,9 @@
 # 📌 할 일(Todo) 관리하기
 
-![완성 예시](./screenshots/ss1.png)
-![완성 예시](./screenshots/ss2.png)
-
 주어진 API를 활용해 '[완성 예시]()' 처럼 할 일(Todo) 관리 기능을 구현합니다!  
+
+![완성 예시](./screenshots/ss1.JPG)  
+![완성 예시](./screenshots/ss2.JPG)
 
 
 ## API
