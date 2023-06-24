@@ -9,9 +9,12 @@ const message = computed(() => {
     return '당신의 할 일을 작성해 보세요!'
   }
   if (!todosStore.filteredTodos.length) {
-    return '필터링된 항목이 없네요..'
+    return '필터링된 항목이 없어요..'
   }
-  return '목록을 재정렬하려면, 드래그 앤 드롭을 하세요~'
+  if (todosStore.filterStatus === 'all') {
+    return '목록을 재정렬하려면, 드래그 앤 드롭을 하세요~'
+  }
+  return '매일 할 일을 확인하세요!'
 })
 </script>
 

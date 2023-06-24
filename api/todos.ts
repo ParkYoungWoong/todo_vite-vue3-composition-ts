@@ -5,7 +5,7 @@ const { APIKEY, USERNAME } = process.env
 
 interface RequestBody {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  path: '' | 'deletions'
+  path: '' | 'deletions' | 'reorder'
   data: { [key: string]: unknown }
 }
 export default async function (req: VercelRequest, res: VercelResponse) {

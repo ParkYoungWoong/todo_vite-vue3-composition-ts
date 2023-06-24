@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import Sortable from 'sortablejs'
 import { useTodosStore } from '~/store/todos'
 import TodoItem from '~/components/TodoItem.vue'
 import TheIcon from '~/components/TheIcon.vue'
 import TheBtn from '~/components/TheBtn.vue'
 
 const todosStore = useTodosStore()
+const todoListEl = ref<HTMLElement | null>(null)
 
 const isAllChecked = computed({
   get() {
@@ -24,13 +26,34 @@ const isAllChecked = computed({
 // 최초 요청!
 todosStore.fetchTodos()
 
+onMounted(() => {
+  initSortable()
+})
+
 function toggleAllCheckboxes() {
   isAllChecked.value = !isAllChecked.value
+}
+function initSortable() {
+  if (todoListEl.value) {
+    new Sortable(todoListEl.value, {
+      handle: '.drag-handle', // 드래그 핸들이 될 요소의 선택자를 입력
+      animation: 0, // 정렬할 때 애니메이션 속도(ms)를 지정, default: 150
+      forceFallback: true, // 다양한 환경의 일관된 Drag&Drop(DnD)을 위해 HTML5 기본 DnD 동작을 무시하고 내장 기능을 사용, default: false
+      // 요소의 DnD가 종료되면 실행할 핸들러(함수)를 지정
+      onEnd: (event) => {
+        const { oldIndex, newIndex } = event
+        todosStore.reorderTodos({
+          oldIndex: oldIndex as number,
+          newIndex: newIndex as number
+        })
+      }
+    })
+  }
 }
 </script>
 
 <template>
-  <div class="todo-list shadow">
+  <div class="todos-wrap shadow">
     <div class="todo-head">
       <TheIcon
         :active="isAllChecked"
@@ -52,15 +75,19 @@ function toggleAllCheckboxes() {
         </TheBtn>
       </div>
     </div>
-    <TodoItem
-      v-for="todo in todosStore.filteredTodos"
-      :key="todo.id"
-      :todo="todo" />
+    <div
+      ref="todoListEl"
+      class="todo-list">
+      <TodoItem
+        v-for="todo in todosStore.filteredTodos"
+        :key="todo.id"
+        :todo="todo" />
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.todo-list {
+.todos-wrap {
   border-radius: 6px;
   overflow: hidden;
 }

@@ -47,6 +47,11 @@ function onTodoModal(id: string) {
       @click="onTodoModal(todo.id)">
       {{ todo.title }}
     </div>
+    <div
+      v-if="todosStore.filterStatus === 'all'"
+      class="drag-handle">
+      <span class="material-symbols-outlined"> drag_indicator </span>
+    </div>
   </div>
 </template>
 
@@ -55,11 +60,15 @@ function onTodoModal(id: string) {
   height: var(--item-height);
   border-bottom: 1px solid var(--border-color);
   padding-left: var(--item-height);
-  padding-right: 24px;
+  padding-right: 20px;
   background-color: #fff;
   position: relative;
   display: flex;
   align-items: center;
+  gap: 8px;
+  &.sortable-chosen {
+    opacity: 0.7;
+  }
   :deep(.the-icon) {
     position: absolute;
     top: 0;
@@ -69,6 +78,7 @@ function onTodoModal(id: string) {
     z-index: 1;
   }
   .title {
+    flex-grow: 1;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -76,6 +86,10 @@ function onTodoModal(id: string) {
       text-decoration: underline;
       cursor: pointer;
     }
+  }
+  .drag-handle {
+    color: #ddd;
+    cursor: move;
   }
 }
 </style>

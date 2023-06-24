@@ -26,6 +26,10 @@ interface UpdateTodoPayload {
 interface DeleteTodoPayload {
   id: string
 }
+interface ReorderTodosPayload {
+  oldIndex: number
+  newIndex: number
+}
 
 export const useTodosStore = defineStore('todos', {
   state: () => ({
@@ -128,7 +132,10 @@ export const useTodosStore = defineStore('todos', {
         .filter((todo) => todo.done)
         .map((todo) => todo.id)
       // 삭제할 할 일이 없는 경우, 요청하지 않음
-      if (!todoIds.length) return
+      if (!todoIds.length) {
+        this.loading = false
+        return
+      }
       try {
         // 완료된 할 일 삭제 요청
         await axios.post('/api/todos', {
@@ -141,6 +148,25 @@ export const useTodosStore = defineStore('todos', {
         this.todos = this.todos.filter((todo) => !todoIds.includes(todo.id))
       } catch (error) {
         console.error('deleteDoneTodos:', error)
+      } finally {
+        this.loading = false
+      }
+    },
+    async reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
+      this.loading = true
+      const movedTodo = this.todos.splice(oldIndex, 1)[0]
+      this.todos.splice(newIndex, 0, movedTodo)
+      const todoIds = this.todos.map((todo) => todo.id)
+      try {
+        await axios.post('/api/todos', {
+          method: 'PUT',
+          path: 'reorder',
+          data: {
+            todoIds
+          }
+        })
+      } catch (error) {
+        console.error('reorderTodos:', error)
       } finally {
         this.loading = false
       }

@@ -94,9 +94,7 @@ curl <ENDPOINT>
   \ -H 'content-type: application/json'
   \ -H 'apikey: <APIKEY>'
   \ -H 'username: <USERNAME>'
-```
-
-- '완성 예시'에서는 '할 일 목록 순서 변경' API와 `order` 속성을 사용하지 않았습니다.   
+``` 
 
 
 ### 할 일 목록 조회
