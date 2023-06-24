@@ -31,8 +31,9 @@ async function createTodo(event: KeyboardEvent) {
       add
     </TheIcon>
     <input
-      v-model="title"
+      :value="title"
       placeholder="새로운 할 일을 작성하세요.."
+      @input="title = ($event.target as HTMLInputElement).value"
       @keydown.enter="createTodo" />
   </div>
 </template>
