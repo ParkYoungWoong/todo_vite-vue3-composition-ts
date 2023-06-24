@@ -1,21 +1,22 @@
+@mixin font {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
 body {
   --head-height: 60px;
   --item-height: 80px;
-  --font-weight: 600;
   --border-color: #DDD;
   min-height: 100vh;
   padding: 70px 20px;
   box-sizing: border-box;
   background-image: linear-gradient(125deg,royalblue,brown);
   color: #333;
-  font-size: 20px;
-  font-weight: 600;
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  @include font;
 }
 input {
-  font-size: 20px;
-  font-weight: 600;
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  @include font;
 }
 
 .shadow {

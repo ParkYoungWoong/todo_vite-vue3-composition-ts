@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently npm:watch-*",
-    "watch-dev": "vite",
+    "watch-vite": "vite",
     "watch-vercel": "vercel dev --listen 2999",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"

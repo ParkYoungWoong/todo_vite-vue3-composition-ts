@@ -6,6 +6,62 @@ Vue Composition API + TypeScript를 사용해 구현합니다.
 ![완성 예시](./screenshots/ss1.JPG)  
 ![완성 예시](./screenshots/ss2.JPG)
 
+## Vue Options vs Composition
+
+- Options API: 강제하는 옵션 사용으로 낮은 진입 장벽 제공, 기존 코드(>=@2)와 호환성 유지
+- Composition API: 유연한 구조로 코드 재사용성 향상 가능, 타입스크립트 호환성 향상
+
+## Pinia
+
+https://pinia.vuejs.org/
+
+- Vue.js 핵심 팀 멤버가 개발한 상태 관리 라이브러리
+- 공식 Vuex와 유사하지만, 더 간단하고 직관적인 API 제공
+- Vue.js 측에서 공식적으로 사용을 추천
+- 다음 버전의 공식 Vuex에서 차용하거나 아예 Pinia로 전환 예정
+
+## Vercel 내부 종속성 버전 재정의
+
+타입스크립트를 사용할 때, 직접 설치한 버전과 Vercel(`@vercel/node`) 내부에서 사용하는 버전이 다른 경우 다음과 같이 일치시킬 수 있습니다.  
+Vercel 서버리스 함수를 사용할 때, 문제가 발생할 수 있습니다.
+
+/package.json
+
+```json
+{
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "vercel": "^30.2.1"
+  },
+  "overrides": {
+    "@vercel/node": {
+      "ts-node": "10.9.1",
+      "typescript": "5.0.2"
+    }
+  }
+}
+```
+
+## ESLint
+
+/.eslintrc.json
+
+```json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  }
+}
+```
+
+- `parser`: ESLint 전반에 걸쳐 사용하는 기본 파서를 설정    
+- `parserOptions.parser`: 특정 플러그인(Vue)에서 사용하는 파서를 설정
 
 ## API 정보
 
@@ -20,7 +76,7 @@ curl <ENDPOINT>
   \ -H 'username: <USERNAME>'
 ```
 
-- 현재 예제에서는 '할 일 목록 순서 변경' API와 `order` 속성을 사용하지 않았습니다.   
+- '완성 예시'에서는 '할 일 목록 순서 변경' API와 `order` 속성을 사용하지 않았습니다.   
 
 
 ### 할 일 목록 조회
