@@ -20,7 +20,27 @@ https://pinia.vuejs.org/
 - Vue.js 측에서 공식적으로 사용을 추천
 - 다음 버전의 공식 Vuex에서 차용하거나 아예 Pinia로 전환 예정
 
-## Vercel 내부 종속성 버전 재정의
+## Vercel
+
+### Vercel SPA Fallback
+
+Vue Router의 HTML5 모드에서 단일 페이지 앱(SPA)을 제공할 때는 적절한 서버 구성이 필요합니다.     
+우리는 Vercel 호스팅을 사용하므로, 모든 경로에 대해 `index.html` 파일을 제공할 수 있게 다음과 같이 옵션을 제공합니다.
+
+https://vercel.com/docs/concepts/projects/project-configuration#legacy-spa-fallback
+
+/ vercel.json
+
+```json
+{
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
+```
+
+### Vercel 내부 종속성 버전 재정의
 
 타입스크립트를 사용할 때, 직접 설치한 버전과 Vercel(`@vercel/node`) 내부에서 사용하는 버전이 다른 경우 다음과 같이 일치시킬 수 있습니다.  
 Vercel 서버리스 함수를 사용할 때, 문제가 발생할 수 있습니다.
