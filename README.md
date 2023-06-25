@@ -232,6 +232,17 @@ interface RequestBody {
 
 __응답 데이터 타입 및 예시:__
 
+```ts
+interface ResponseValue {
+  id: string
+  order: number
+  title: string
+  done: boolean
+  createdAt: string
+  updatedAt: string
+}
+```
+
 ```json
 {
   "id": "7P8dOM4voAv8a8cfoeKZ",
