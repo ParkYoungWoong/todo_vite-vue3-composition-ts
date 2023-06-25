@@ -8,9 +8,10 @@ const todosStore = useTodosStore()
 
 const title = ref('')
 
-async function createTodo(event: KeyboardEvent) {
+async function createTodo(event: MouseEvent | KeyboardEvent) {
+  if (event instanceof KeyboardEvent && event.isComposing) return // 한글 중복 입력 방지
+  if (!title.value.trim()) return
   try {
-    if (event.key !== 'Enter') return
     await todosStore.createTodo({
       title: title.value
     })
@@ -43,16 +44,13 @@ async function createTodo(event: KeyboardEvent) {
   height: var(--item-height);
   margin-bottom: 30px;
   position: relative;
-  display: flex;
-  align-items: center;
-  color: royalblue;
   :deep(.the-icon),
   :deep(.the-loading) {
     position: absolute;
     top: 0;
     bottom: 0;
-    margin: auto;
     left: 24px;
+    margin: auto;
     z-index: 1;
   }
   input {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { cloneDeep } from 'lodash'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTodosStore } from '~/store/todos'
@@ -21,7 +20,7 @@ const currentTodo = computed(() => todosStore.currentTodo as Todo)
 if (route.params.id) {
   for (const todo of todosStore.todos) {
     if (todo.id === route.params.id) {
-      todosStore.currentTodo = cloneDeep(todo)
+      todosStore.currentTodo = { ...todo } // 복사(Shallow)
       break
     }
   }

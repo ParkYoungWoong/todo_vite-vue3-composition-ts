@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { cloneDeep } from 'lodash'
 import { defineStore } from 'pinia'
 
 export type Todos = Todo[]
@@ -17,11 +16,6 @@ interface Filter {
 }
 interface CreateTodoPayload {
   title: string
-}
-interface UpdateTodoPayload {
-  id: string
-  title: string
-  done: boolean
 }
 interface DeleteTodoPayload {
   id: string
@@ -62,9 +56,7 @@ export const useTodosStore = defineStore('todos', {
       if (this.loading) return
       this.loading = true
       try {
-        const { data } = await axios.post('/api/todos', {
-          method: 'GET'
-        })
+        const { data } = await axios.post('/api/todos')
         this.todos = data
       } catch (error) {
         console.error('fetchTodos:', error)
@@ -74,7 +66,6 @@ export const useTodosStore = defineStore('todos', {
     },
     async createTodo({ title }: CreateTodoPayload) {
       if (this.loading) return
-      if (!title.trim()) return
       this.loading = true
       try {
         const { data: createdTodo } = await axios.post('/api/todos', {
@@ -90,29 +81,35 @@ export const useTodosStore = defineStore('todos', {
         this.loading = false
       }
     },
-    async updateTodo({ id, title, done }: UpdateTodoPayload) {
-      let todoRef = {} as Todo
+    async updateTodo(todo: Todo) {
+      this.loading = true
       let backedUpTodo = {} as Todo
-      const foundTodo = this.todos.find((todo) => todo.id === id)
-      if (foundTodo) {
-        todoRef = foundTodo
-        backedUpTodo = cloneDeep(foundTodo)
-        Object.assign(foundTodo, { id, title, done })
+      const foundTodo = this.todos.find((t) => t.id === todo.id)
+      // 현재 목록에서 찾은 할 일이 없는 경우, 요청하지 않음
+      if (!foundTodo) {
+        this.loading = false
+        return
       }
+      backedUpTodo = { ...foundTodo } // 복구를 위한 복사(Shallow)
+      Object.assign(foundTodo, todo)
       try {
+        const { id: path, title, done } = todo
         const { data: updatedTodo } = await axios.post('/api/todos', {
           method: 'PUT',
-          path: id,
+          path,
           data: {
             title,
             done
           }
         })
-        todoRef.updatedAt = (updatedTodo as Todo).updatedAt
+        // for .updatedAt
+        Object.assign(foundTodo, updatedTodo)
       } catch (error) {
         console.error('updateTodo:', error)
         // 업데이트가 실패한 경우, 해당 할 일을 복구
-        Object.assign(todoRef, backedUpTodo)
+        Object.assign(foundTodo, backedUpTodo)
+      } finally {
+        this.loading = false
       }
     },
     async deleteTodo({ id }: DeleteTodoPayload) {
@@ -154,6 +151,7 @@ export const useTodosStore = defineStore('todos', {
       }
     },
     async reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
+      if (oldIndex === newIndex) return
       this.loading = true
       const movedTodo = this.todos.splice(oldIndex, 1)[0]
       this.todos.splice(newIndex, 0, movedTodo)

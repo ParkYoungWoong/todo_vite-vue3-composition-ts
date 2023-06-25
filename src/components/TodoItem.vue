@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { cloneDeep } from 'lodash'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTodosStore } from '~/store/todos'
@@ -19,8 +18,7 @@ const done = computed({
   },
   set(val) {
     todosStore.updateTodo({
-      id: props.todo.id,
-      title: props.todo.title,
+      ...props.todo,
       done: val
     })
   }
@@ -29,9 +27,9 @@ const done = computed({
 function toggleDone() {
   done.value = !done.value
 }
-function onTodoModal(id: string) {
-  todosStore.currentTodo = cloneDeep(props.todo)
-  router.push(`/${id}`)
+function onTodoModal() {
+  todosStore.currentTodo = { ...props.todo } // 복사(Shallow)
+  router.push(`/${props.todo.id}`)
 }
 </script>
 
@@ -44,7 +42,7 @@ function onTodoModal(id: string) {
     </TheIcon>
     <div
       class="title"
-      @click="onTodoModal(todo.id)">
+      @click="onTodoModal">
       {{ todo.title }}
     </div>
     <div
@@ -82,9 +80,9 @@ function onTodoModal(id: string) {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    cursor: pointer;
     &:hover {
       text-decoration: underline;
-      cursor: pointer;
     }
   }
   .drag-handle {
