@@ -100,7 +100,7 @@ export const useTodosStore = defineStore('todos', {
         Object.assign(foundTodo, { id, title, done })
       }
       try {
-        await axios.post('/api/todos', {
+        const { data: updatedTodo } = await axios.post('/api/todos', {
           method: 'PUT',
           path: id,
           data: {
@@ -108,6 +108,7 @@ export const useTodosStore = defineStore('todos', {
             done
           }
         })
+        todoRef.updatedAt = (updatedTodo as Todo).updatedAt
       } catch (error) {
         console.error('updateTodo:', error)
         // 업데이트가 실패한 경우, 해당 할 일을 복구

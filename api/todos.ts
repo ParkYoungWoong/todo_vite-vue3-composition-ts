@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { VercelRequest, VercelResponse } from '@vercel/node'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 const { APIKEY, USERNAME } = process.env
 
