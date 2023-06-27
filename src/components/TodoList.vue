@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import Sortable from 'sortablejs'
+import { debounce } from 'lodash'
 import { useTodosStore } from '~/store/todos'
 import TodoItem from '~/components/TodoItem.vue'
 import TheIcon from '~/components/TheIcon.vue'
@@ -9,6 +10,9 @@ import TheBtn from '~/components/TheBtn.vue'
 const todosStore = useTodosStore()
 const todoListEl = ref<HTMLElement | null>(null)
 
+const debounced = debounce((val: boolean) => {
+  todosStore.updateCheckboxes(val)
+}, 400)
 const isAllChecked = computed({
   get() {
     return (
@@ -16,10 +20,11 @@ const isAllChecked = computed({
       todosStore.filteredTodos.every((todo) => todo.done)
     )
   },
-  set(value: boolean) {
+  set(val: boolean) {
     todosStore.todos.forEach((todo) => {
-      todo.done = value
+      todo.done = val
     })
+    debounced(val)
   }
 })
 

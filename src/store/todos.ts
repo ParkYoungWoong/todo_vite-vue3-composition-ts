@@ -4,12 +4,14 @@ import { defineStore } from 'pinia'
 export type Todos = Todo[]
 export interface Todo {
   id: string // 할 일 ID
+  order: number // 할 일 순서
   title: string // 할 일 제목
   done: boolean // 할 일 완료 여부
   createdAt: string // 할 일 생성일
   updatedAt: string // 할 일 수정일
 }
 type FilterStatus = 'all' | 'todo' | 'done'
+type Filters = Filter[]
 interface Filter {
   label: string
   name: FilterStatus
@@ -25,28 +27,38 @@ interface ReorderTodosPayload {
   newIndex: number
 }
 
+const filters: Filters = [
+  { label: '전체', name: 'all' },
+  { label: '할 일만', name: 'todo' },
+  { label: '완료만', name: 'done' }
+]
+const currentTodo: Todo = {
+  id: '',
+  title: '',
+  order: 0,
+  done: false,
+  createdAt: '',
+  updatedAt: ''
+}
 export const useTodosStore = defineStore('todos', {
   state: () => ({
     loading: false,
     todos: [] as Todos,
-    currentTodo: null as Todo | null,
     filterStatus: 'all' as FilterStatus,
-    filters: [
-      { label: '전체', name: 'all' },
-      { label: '할 일만', name: 'todo' },
-      { label: '완료만', name: 'done' }
-    ] as Filter[]
+    filters,
+    currentTodo
   }),
   getters: {
     filteredTodos(state) {
       return state.todos.filter((todo) => {
         switch (state.filterStatus) {
-          case 'all':
-            return true
           case 'todo':
             return !todo.done
           case 'done':
             return todo.done
+          case 'all':
+          default:
+            return true
         }
       })
     }
@@ -82,15 +94,11 @@ export const useTodosStore = defineStore('todos', {
       }
     },
     async updateTodo(todo: Todo) {
-      this.loading = true
-      let backedUpTodo = {} as Todo
       const foundTodo = this.todos.find((t) => t.id === todo.id)
       // 현재 목록에서 찾은 할 일이 없는 경우, 요청하지 않음
-      if (!foundTodo) {
-        this.loading = false
-        return
-      }
-      backedUpTodo = { ...foundTodo } // 복구를 위한 복사(Shallow)
+      if (!foundTodo) return
+
+      const backedUpTodo = { ...foundTodo } // 복구를 위한 복사(Shallow)
       Object.assign(foundTodo, todo)
       try {
         const { id: path, title, done } = todo
@@ -103,14 +111,20 @@ export const useTodosStore = defineStore('todos', {
           }
         })
         // for .updatedAt
-        Object.assign(foundTodo, updatedTodo)
+        foundTodo.updatedAt = updatedTodo.updatedAt
       } catch (error) {
         console.error('updateTodo:', error)
         // 업데이트가 실패한 경우, 해당 할 일을 복구
         Object.assign(foundTodo, backedUpTodo)
-      } finally {
-        this.loading = false
       }
+    },
+    updateCheckboxes(done: boolean) {
+      this.todos.forEach((todo) => {
+        this.updateTodo({
+          ...todo,
+          done
+        })
+      })
     },
     async deleteTodo({ id }: DeleteTodoPayload) {
       try {
@@ -124,16 +138,14 @@ export const useTodosStore = defineStore('todos', {
       }
     },
     async deleteDoneTodos() {
-      this.loading = true
       // 완료된 할 일 ID 목록을 요청 양식에 맞는 배열로 만들기
       const todoIds = this.todos
         .filter((todo) => todo.done)
         .map((todo) => todo.id)
       // 삭제할 할 일이 없는 경우, 요청하지 않음
-      if (!todoIds.length) {
-        this.loading = false
-        return
-      }
+      if (!todoIds.length) return
+
+      this.loading = true
       try {
         // 완료된 할 일 삭제 요청
         await axios.post('/api/todos', {
@@ -152,10 +164,11 @@ export const useTodosStore = defineStore('todos', {
     },
     async reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
       if (oldIndex === newIndex) return
-      this.loading = true
       const movedTodo = this.todos.splice(oldIndex, 1)[0]
       this.todos.splice(newIndex, 0, movedTodo)
       const todoIds = this.todos.map((todo) => todo.id)
+
+      this.loading = true
       try {
         await axios.post('/api/todos', {
           method: 'PUT',

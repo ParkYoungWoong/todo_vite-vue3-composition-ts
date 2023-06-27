@@ -1,9 +1,9 @@
 <template>
-  <div class="the-loading"></div>
+  <div class="the-loader"></div>
 </template>
 
 <style scoped lang="scss">
-.the-loading {
+.the-loader {
   width: 30px;
   height: 30px;
   border: 3px solid;

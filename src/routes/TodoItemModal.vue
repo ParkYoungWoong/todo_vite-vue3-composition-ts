@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTodosStore } from '~/store/todos'
-import type { Todo } from '~/store/todos'
 import TheIcon from '~/components/TheIcon.vue'
 import TheBtn from '~/components/TheBtn.vue'
 
@@ -15,20 +14,17 @@ const editorEl = ref<HTMLElement | null>(null)
 const updateLoading = ref(false)
 const deleteLoading = ref(false)
 
-const currentTodo = computed(() => todosStore.currentTodo as Todo)
-
-if (route.params.id) {
-  for (const todo of todosStore.todos) {
-    if (todo.id === route.params.id) {
-      todosStore.currentTodo = { ...todo } // 복사(Shallow)
-      break
-    }
-  }
-}
+const foundTodo = todosStore.todos.find((todo) => todo.id === route.params.id)
+foundTodo
+  ? (todosStore.currentTodo = { ...foundTodo }) // 복사(Shallow)
+  : router.replace('/')
 
 onMounted(() => {
   editorEl.value?.focus()
   window.addEventListener('keydown', escKeyHandler)
+})
+onUnmounted(() => {
+  window.removeEventListener('keydown', escKeyHandler)
 })
 
 function escKeyHandler(event: KeyboardEvent) {
@@ -37,16 +33,15 @@ function escKeyHandler(event: KeyboardEvent) {
   }
 }
 function offModal() {
-  router.back()
-  window.removeEventListener('keydown', escKeyHandler)
+  router.push('/')
 }
 function toggleDone() {
-  currentTodo.value.done = !currentTodo.value.done
+  todosStore.currentTodo.done = !todosStore.currentTodo.done
 }
 function onChange() {
   const title = editorEl.value?.textContent
   if (title && title.trim()) {
-    currentTodo.value.title = title
+    todosStore.currentTodo.title = title
   }
 }
 async function updateTodo() {
@@ -54,13 +49,11 @@ async function updateTodo() {
   updateLoading.value = true
   try {
     await todosStore.updateTodo({
-      id: currentTodo.value.id,
-      title: currentTodo.value.title,
-      done: currentTodo.value.done
+      ...todosStore.currentTodo
     })
     offModal()
   } catch (error) {
-    console.error('TodoModal/updateTodo')
+    console.error('TodoItemModal/updateTodo')
   } finally {
     updateLoading.value = false
   }
@@ -71,11 +64,11 @@ async function deleteTodo() {
   deleteLoading.value = true
   try {
     await todosStore.deleteTodo({
-      id: currentTodo.value.id
+      id: todosStore.currentTodo.id
     })
     offModal()
   } catch (error) {
-    console.error('TodoModal/deleteTodo')
+    console.error('TodoItemModal/deleteTodo')
   } finally {
     deleteLoading.value = false
   }
@@ -93,7 +86,7 @@ function formatDate(date: string) {
     <div class="contents">
       <div class="todo-head">
         <TheIcon
-          :active="currentTodo?.done"
+          :active="todosStore.currentTodo.done"
           @click="toggleDone">
           check
         </TheIcon>
@@ -114,11 +107,16 @@ function formatDate(date: string) {
         </div>
       </div>
       <div class="date-group">
-        <div class="date">생성일: {{ formatDate(currentTodo?.createdAt) }}</div>
+        <div class="date">
+          생성일: {{ formatDate(todosStore.currentTodo.createdAt) }}
+        </div>
         <div
-          v-if="currentTodo?.createdAt !== currentTodo?.updatedAt"
+          v-if="
+            todosStore.currentTodo.createdAt !==
+            todosStore.currentTodo.updatedAt
+          "
           class="date">
-          수정일: {{ formatDate(currentTodo?.updatedAt) }}
+          수정일: {{ formatDate(todosStore.currentTodo.updatedAt) }}
         </div>
       </div>
       <div
@@ -127,7 +125,7 @@ function formatDate(date: string) {
         contenteditable
         @blur="onChange"
         @keydown.enter.prevent="onChange(), updateTodo()"
-        v-text="currentTodo?.title"></div>
+        v-text="todosStore.currentTodo.title"></div>
     </div>
   </div>
 </template>
@@ -143,7 +141,6 @@ function formatDate(date: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
   .background {
     width: 100%;
     height: 100%;
@@ -151,12 +148,12 @@ function formatDate(date: string) {
     background-color: rgba(#000, 0.7);
   }
   .contents {
+    margin: 0 20px;
     position: relative;
     width: 100%;
     max-width: 700px;
     max-height: calc(100vh - 40px);
     border-radius: 6px;
-    box-sizing: border-box;
     background-color: #fff;
     overflow: auto;
     .date-group {

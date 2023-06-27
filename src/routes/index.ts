@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from './MainPage.vue'
-import TodoModal from './TodoModal.vue'
+import TodoItemModal from './TodoItemModal.vue'
 
 export default createRouter({
   history: createWebHistory(),
@@ -11,7 +11,7 @@ export default createRouter({
       children: [
         {
           path: '/:id',
-          component: TodoModal
+          component: TodoItemModal
         }
       ]
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheLoading from '~/components/TheLoading.vue'
+import TheLoader from '~/components/TheLoader.vue'
 
 defineProps<{
   active?: boolean
@@ -17,7 +17,7 @@ defineProps<{
       'btn-danger': danger
     }"
     class="btn">
-    <TheLoading v-if="loading" />
+    <TheLoader v-if="loading" />
     <slot v-else></slot>
   </button>
 </template>
@@ -43,16 +43,16 @@ defineProps<{
   &.active {
     color: royalblue;
   }
+  &.btn-success {
+    background-color: royalblue;
+    color: #fff;
+  }
   &.btn-danger {
     color: rgba(red, 0.25);
     &:hover {
       background-color: red;
       color: #fff;
     }
-  }
-  &.btn-success {
-    background-color: royalblue;
-    color: #fff;
   }
 }
 </style>

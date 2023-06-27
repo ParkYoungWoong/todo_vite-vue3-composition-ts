@@ -5,7 +5,6 @@
 }
 
 body {
-  --head-height: 60px;
   --item-height: 80px;
   --border-color: #DDD;
   min-height: 100vh; // 배경 이미지를 위함!
@@ -26,21 +25,16 @@ input {
 }
 
 .todo-head {
-  height: var(--head-height);
+  height: 60px;
   border-bottom: 1px solid var(--border-color);
-  padding-left: var(--item-height);
-  padding-right: 24px;
   background-color: rgba(#fff, 0.9);
   position: relative;
-  display: flex;
-  align-items: center;
   .the-icon {
     position: absolute;
     top: 0;
     bottom: 0;
     margin: auto;
     left: 24px;
-    z-index: 1;
   }
   .btn-group {
     height: 100%;

@@ -13,13 +13,9 @@ const todosStore = useTodosStore()
     <TodoList />
     <TheMessage />
   </main>
-  <RouterView
-    v-if="todosStore.todos.length"
-    v-slot="{ Component: View }">
-    <Transition name="fade">
-      <Component :is="View" />
-    </Transition>
-  </RouterView>
+  <Transition>
+    <RouterView v-if="todosStore.todos.length" />
+  </Transition>
 </template>
 
 <style scoped lang="scss">
@@ -28,12 +24,12 @@ main {
   margin: 0 auto;
 }
 
-.fade-enter-active,
-.fade-leave-active {
+.v-enter-active,
+.v-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter-from,
-.fade-leave-to {
+.v-enter-from,
+.v-leave-to {
   opacity: 0;
 }
 </style>
