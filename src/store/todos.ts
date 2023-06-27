@@ -68,7 +68,9 @@ export const useTodosStore = defineStore('todos', {
       if (this.loading) return
       this.loading = true
       try {
-        const { data } = await axios.post('/api/todos')
+        const { data } = await axios.post('/api/todos', {
+          method: 'GET'
+        })
         this.todos = data
       } catch (error) {
         console.error('fetchTodos:', error)
