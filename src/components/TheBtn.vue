@@ -1,12 +1,24 @@
-<script setup lang="ts">
+<script setup>
 import TheLoader from '~/components/TheLoader.vue'
 
-defineProps<{
-  active?: boolean
-  success?: boolean
-  danger?: boolean
-  loading?: boolean
-}>()
+defineProps({
+  active: {
+    type: Boolean,
+    default: false
+  },
+  success: {
+    type: Boolean,
+    default: false
+  },
+  danger: {
+    type: Boolean,
+    default: false
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  }
+})
 </script>
 
 <template>
@@ -22,7 +34,7 @@ defineProps<{
   </button>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .btn {
   min-width: 72px;
   padding: 6px 20px;
@@ -36,23 +48,23 @@ defineProps<{
   cursor: pointer;
   display: flex;
   align-items: center;
-  &:hover {
-    background-color: #ddd;
-    color: #fff;
-  }
-  &.active {
-    color: royalblue;
-  }
-  &.btn-success {
-    background-color: royalblue;
-    color: #fff;
-  }
-  &.btn-danger {
-    color: rgba(red, 0.25);
-    &:hover {
-      background-color: red;
-      color: #fff;
-    }
-  }
+}
+.btn:hover {
+  background-color: #ddd;
+  color: #fff;
+}
+.btn.active {
+  color: royalblue;
+}
+.btn.btn-success {
+  background-color: royalblue;
+  color: #fff;
+}
+.btn.btn-danger {
+  color: rgba(255, 0, 0, 0.25);
+}
+.btn.btn-danger:hover {
+  background-color: rgb(255, 0, 0);
+  color: #fff;
 }
 </style>

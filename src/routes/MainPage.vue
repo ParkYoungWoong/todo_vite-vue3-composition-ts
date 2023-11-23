@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useTodosStore } from '~/store/todos'
 import TodoCreator from '~/components/TodoCreator.vue'
 import TodoList from '~/components/TodoList.vue'
@@ -18,7 +18,7 @@ const todosStore = useTodosStore()
   </Transition>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 main {
   max-width: 700px;
   margin: 0 auto;

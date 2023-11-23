@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import dayjs from 'dayjs'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -10,7 +10,7 @@ const route = useRoute()
 const router = useRouter()
 const todosStore = useTodosStore()
 
-const editorEl = ref<HTMLElement | null>(null)
+const editorEl = ref(null)
 const updateLoading = ref(false)
 const deleteLoading = ref(false)
 
@@ -27,7 +27,7 @@ onUnmounted(() => {
   window.removeEventListener('keydown', escKeyHandler)
 })
 
-function escKeyHandler(event: KeyboardEvent) {
+function escKeyHandler(event) {
   if (event.key === 'Escape') {
     offModal()
   }
@@ -73,7 +73,7 @@ async function deleteTodo() {
     deleteLoading.value = false
   }
 }
-function formatDate(date: string) {
+function formatDate(date) {
   return dayjs(date).format('YYYY년 M월 D일 H시 m분')
 }
 </script>
@@ -130,7 +130,7 @@ function formatDate(date: string) {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .modal {
   position: fixed;
   top: 0;
@@ -141,34 +141,34 @@ function formatDate(date: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  .background {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background-color: rgba(#000, 0.7);
-  }
-  .contents {
-    margin: 0 20px;
-    position: relative;
-    width: 100%;
-    max-width: 700px;
-    max-height: calc(100vh - 40px);
-    border-radius: 6px;
-    background-color: #fff;
-    overflow: auto;
-    .date-group {
-      padding: 30px 30px 0 30px;
-      .date {
-        color: #bbb;
-        font-size: 14px;
-        line-height: 1.4;
-      }
-    }
-    .editor {
-      padding: 30px;
-      line-height: 1.5;
-      outline: none;
-    }
-  }
+}
+.modal .background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.modal .contents {
+  margin: 0 20px;
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  max-height: calc(100vh - 40px);
+  border-radius: 6px;
+  background-color: #fff;
+  overflow: auto;
+}
+.modal .contents .date-group {
+  padding: 30px 30px 0 30px;
+}
+.modal .contents .date-group .date {
+  color: #bbb;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.modal .contents .editor {
+  padding: 30px;
+  line-height: 1.5;
+  outline: none;
 }
 </style>

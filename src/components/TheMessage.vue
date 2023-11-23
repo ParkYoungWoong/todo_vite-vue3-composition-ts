@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
 import { useTodosStore } from '~/store/todos'
 
@@ -24,7 +24,7 @@ const message = computed(() => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .the-message {
   margin-top: 40px;
   text-align: center;

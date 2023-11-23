@@ -1,16 +1,18 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTodosStore } from '~/store/todos'
-import type { Todo } from '~/store/todos'
 import TheIcon from '~/components/TheIcon.vue'
 
 const router = useRouter()
 const todosStore = useTodosStore()
 
-const props = defineProps<{
-  todo: Todo
-}>()
+const props = defineProps({
+  todo: {
+    type: Object,
+    required: true
+  }
+})
 
 const done = computed({
   get() {
@@ -53,7 +55,7 @@ function onTodoModal() {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .todo-item {
   height: var(--item-height);
   border-bottom: 1px solid var(--border-color);
@@ -64,30 +66,30 @@ function onTodoModal() {
   display: flex;
   align-items: center;
   gap: 8px;
-  &.sortable-chosen {
-    opacity: 0.7;
-  }
-  :deep(.the-icon) {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    left: 24px;
-    z-index: 1;
-  }
-  .title {
-    flex-grow: 1;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  .drag-handle {
-    color: #ddd;
-    cursor: move;
-  }
+}
+.todo-item.sortable-chosen {
+  opacity: 0.7;
+}
+:deep(.the-icon) {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 24px;
+  z-index: 1;
+}
+.todo-item .title {
+  flex-grow: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+}
+.todo-item .title:hover {
+  text-decoration: underline;
+}
+.todo-item .drag-handle {
+  color: #ddd;
+  cursor: move;
 }
 </style>

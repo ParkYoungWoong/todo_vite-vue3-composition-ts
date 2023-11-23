@@ -1,7 +1,10 @@
-<script setup lang="ts">
-defineProps<{
-  active?: boolean
-}>()
+<script setup>
+defineProps({
+  active: {
+    type: Boolean,
+    default: false
+  }
+})
 </script>
 
 <template>
@@ -14,7 +17,7 @@ defineProps<{
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .the-icon {
   width: 30px;
   height: 30px;
@@ -25,16 +28,16 @@ defineProps<{
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  .material-symbols-outlined {
-    opacity: 0;
-  }
-  &.active {
-    background-color: royalblue;
-    border: 1px solid royalblue;
-    .material-symbols-outlined {
-      opacity: 1;
-      color: #fff;
-    }
-  }
+}
+.the-icon .material-symbols-outlined {
+  opacity: 0;
+}
+.the-icon.active {
+  background-color: royalblue;
+  border: 1px solid royalblue;
+}
+.the-icon.active .material-symbols-outlined {
+  opacity: 1;
+  color: #fff;
 }
 </style>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref, computed, onMounted } from 'vue'
 import Sortable from 'sortablejs'
 import { debounce } from 'lodash'
@@ -8,9 +8,9 @@ import TheIcon from '~/components/TheIcon.vue'
 import TheBtn from '~/components/TheBtn.vue'
 
 const todosStore = useTodosStore()
-const todoListEl = ref<HTMLElement | null>(null)
+const todoListEl = (ref < HTMLElement) | (null > null)
 
-const debounced = debounce((val: boolean) => {
+const debounced = debounce((val) => {
   todosStore.updateCheckboxes(val)
 }, 400)
 const isAllChecked = computed({
@@ -20,7 +20,7 @@ const isAllChecked = computed({
       todosStore.filteredTodos.every((todo) => todo.done)
     )
   },
-  set(val: boolean) {
+  set(val) {
     todosStore.todos.forEach((todo) => {
       todo.done = val
     })
@@ -48,8 +48,8 @@ function initSortable() {
       onEnd: (event) => {
         const { oldIndex, newIndex } = event
         todosStore.reorderTodos({
-          oldIndex: oldIndex as number,
-          newIndex: newIndex as number
+          oldIndex: oldIndex,
+          newIndex: newIndex
         })
       }
     })
@@ -91,7 +91,7 @@ function initSortable() {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .todos-wrap {
   border-radius: 6px;
   overflow: hidden;

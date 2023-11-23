@@ -2,7 +2,7 @@
   <div class="the-loader"></div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .the-loader {
   width: 30px;
   height: 30px;

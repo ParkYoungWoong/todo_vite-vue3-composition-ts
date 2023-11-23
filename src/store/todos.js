@@ -1,38 +1,12 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 
-export type Todos = Todo[]
-export interface Todo {
-  id: string // 할 일 ID
-  order: number // 할 일 순서
-  title: string // 할 일 제목
-  done: boolean // 할 일 완료 여부
-  createdAt: string // 할 일 생성일
-  updatedAt: string // 할 일 수정일
-}
-type FilterStatus = 'all' | 'todo' | 'done'
-type Filters = Filter[]
-interface Filter {
-  label: string
-  name: FilterStatus
-}
-interface CreateTodoPayload {
-  title: string
-}
-interface DeleteTodoPayload {
-  id: string
-}
-interface ReorderTodosPayload {
-  oldIndex: number
-  newIndex: number
-}
-
-const filters: Filters = [
+const filters = [
   { label: '전체', name: 'all' },
   { label: '할 일만', name: 'todo' },
   { label: '완료만', name: 'done' }
 ]
-const currentTodo: Todo = {
+const currentTodo = {
   id: '',
   title: '',
   order: 0,
@@ -43,8 +17,8 @@ const currentTodo: Todo = {
 export const useTodosStore = defineStore('todos', {
   state: () => ({
     loading: false,
-    todos: [] as Todos,
-    filterStatus: 'all' as FilterStatus,
+    todos: [],
+    filterStatus: 'all',
     filters,
     currentTodo
   }),
@@ -78,7 +52,7 @@ export const useTodosStore = defineStore('todos', {
         this.loading = false
       }
     },
-    async createTodo({ title }: CreateTodoPayload) {
+    async createTodo({ title }) {
       if (this.loading) return
       this.loading = true
       try {
@@ -95,7 +69,7 @@ export const useTodosStore = defineStore('todos', {
         this.loading = false
       }
     },
-    async updateTodo(todo: Todo) {
+    async updateTodo(todo) {
       const foundTodo = this.todos.find((t) => t.id === todo.id)
       // 현재 목록에서 찾은 할 일이 없는 경우, 요청하지 않음
       if (!foundTodo) return
@@ -120,7 +94,7 @@ export const useTodosStore = defineStore('todos', {
         Object.assign(foundTodo, backedUpTodo)
       }
     },
-    updateCheckboxes(done: boolean) {
+    updateCheckboxes(done) {
       this.todos.forEach((todo) => {
         this.updateTodo({
           ...todo,
@@ -128,7 +102,7 @@ export const useTodosStore = defineStore('todos', {
         })
       })
     },
-    async deleteTodo({ id }: DeleteTodoPayload) {
+    async deleteTodo({ id }) {
       try {
         await axios.post('/api/todos', {
           method: 'DELETE',
@@ -164,7 +138,7 @@ export const useTodosStore = defineStore('todos', {
         this.loading = false
       }
     },
-    async reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
+    async reorderTodos({ oldIndex, newIndex }) {
       if (oldIndex === newIndex) return
       const movedTodo = this.todos.splice(oldIndex, 1)[0]
       this.todos.splice(newIndex, 0, movedTodo)
