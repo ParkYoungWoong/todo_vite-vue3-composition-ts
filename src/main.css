@@ -18,8 +18,8 @@ input {
 
 .shadow {
   box-shadow:
-    4px 4px 14px rgba(#000,.1),
-    4px 4px 50px rgba(#000,.2);
+    4px 4px 14px rgba(0,0,0,.1),
+    4px 4px 50px rgba(0,0,0,.2);
 }
 
 .todo-head {
